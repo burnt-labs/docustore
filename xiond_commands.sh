@@ -24,8 +24,8 @@ xiond tx wasm execute $CONTRACT '{"Delete":{"collection":"mycol","document":"doc
   --from $KEY --gas auto --gas-adjustment 1.3 --gas-prices 0.025uxion --broadcast-mode sync --chain-id $CHAIN_ID --node $NODE
 
 # Set Collection Permissions
-xiond tx wasm execute $CONTRACT '{"SetCollectionPermissions":{"collection":"mycol","permissions":{"create":{"Anyone":{}},"update":{"Anyone":{}},"delete":{"AdminOnly":{}},"read":{"Anyone":{}}}}}' \
-  --from $KEY --gas auto --gas-adjustment 1.3 --gas-prices 0.025uxion --broadcast-mode sync --chain-id $CHAIN_ID --node $NODE
+xiond tx wasm execute $CONTRACT '{"SetCollectionPermissions":{"collection":"mycol","permissions":{"create":"Anyone","update":"Anyone","delete":"AdminOnly","read":"Anyone"}}}' \
+  --from $KEY --gas auto --gas-prices 0.025uxion --gas-adjustment 1.3 --broadcast-mode sync --chain-id $CHAIN_ID --node $NODE
 
 # Grant Role
 xiond tx wasm execute $CONTRACT '{"GrantRole":{"user":"'$USER'","role":"editor"}}' \
