@@ -9,6 +9,9 @@ use serde_json;
 use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, DocumentResponse, CollectionResponse, WriteOperation, WriteType};
 use crate::state::{Document, CollectionPermissions, PermissionLevel, DOCUMENTS, ADMIN, COLLECTION_PERMISSIONS, USER_ROLES};
 
+pub mod execute;
+pub mod query;
+
 const CONTRACT_NAME: &str = "firebase-storage";
 const CONTRACT_VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -36,32 +39,12 @@ pub fn execute(
     info: MessageInfo,
     msg: ExecuteMsg,
 ) -> StdResult<Response> {
-    match msg {
-        ExecuteMsg::Set { collection, document, data } => {
-            execute_set(deps, env, info, collection, document, data)
-        }
-        ExecuteMsg::Update { collection, document, data } => {
-            execute_update(deps, env, info, collection, document, data)
-        }
-        ExecuteMsg::Delete { collection, document } => {
-            execute_delete(deps, env, info, collection, document)
-        }
-        ExecuteMsg::BatchWrite { operations } => {
-            execute_batch_write(deps, env, info, operations)
-        }
-        ExecuteMsg::SetCollectionPermissions { collection, permissions } => {
-            execute_set_permissions(deps, env, info, collection, permissions)
-        }
-        ExecuteMsg::GrantRole { user, role } => {
-            execute_grant_role(deps, env, info, user, role)
-        }
-        ExecuteMsg::RevokeRole { user, role } => {
-            execute_revoke_role(deps, env, info, user, role)
-        }
-        ExecuteMsg::TransferAdmin { new_admin } => {
-            execute_transfer_admin(deps, env, info, new_admin)
-        }
-    }
+    execute::execute(deps, env, info, msg)
+}
+
+#[entry_point]
+pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
+    query::query(deps, msg)
 }
 
 fn execute_set(
@@ -286,30 +269,6 @@ fn execute_transfer_admin(
         .add_attribute("action", "transfer_admin")
         .add_attribute("old_admin", admin)
         .add_attribute("new_admin", new_admin_addr))
-}
-
-#[entry_point]
-pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
-    match msg {
-        QueryMsg::Get { collection, document } => {
-            query_get(deps, collection, document)
-        }
-        QueryMsg::Collection { collection, limit, start_after } => {
-            query_collection(deps, collection, limit, start_after)
-        }
-        QueryMsg::UserDocuments { owner, collection, limit, start_after } => {
-            query_user_documents(deps, owner, collection, limit, start_after)
-        }
-        QueryMsg::GetCollectionPermissions { collection } => {
-            query_collection_permissions(deps, collection)
-        }
-        QueryMsg::GetUserRoles { user } => {
-            query_user_roles(deps, user)
-        }
-        QueryMsg::CheckPermission { collection, user, action } => {
-            query_check_permission(deps, collection, user, action)
-        }
-    }
 }
 
 fn query_get(
