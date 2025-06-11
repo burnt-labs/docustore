@@ -99,6 +99,10 @@ pub enum QueryMsg {
         user: String,
         action: String, // "create", "update", "delete", "read"
     },
+    // New query types
+    GetDocumentStats { collection: String },
+    ListCollections { limit: Option<u32>, start_after: Option<String> },
+    SearchDocuments { collection: String, query: String, limit: Option<u32>, start_after: Option<String> },
 }
 
 // Response types
@@ -113,5 +117,44 @@ pub struct DocumentResponse {
 #[serde(rename_all = "camelCase")]
 pub struct CollectionResponse {
     pub documents: Vec<(String, Document)>,  // (doc_id, document)
+    pub next_start_after: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct DocumentStats {
+    pub total_documents: u64,
+    pub total_size: u64,
+    pub last_updated: u64,
+    pub unique_owners: u64,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct CollectionInfo {
+    pub name: String,
+    pub document_count: u64,
+    pub last_activity: u64,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct CollectionListResponse {
+    pub collections: Vec<CollectionInfo>,
+    pub next_start_after: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct SearchResult {
+    pub document_id: String,
+    pub matching_fields: Vec<String>,
+    pub relevance_score: f64,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct SearchResponse {
+    pub results: Vec<SearchResult>,
     pub next_start_after: Option<String>,
 }
