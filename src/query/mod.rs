@@ -8,6 +8,7 @@ use crate::state::{DOCUMENTS, ADMIN, COLLECTION_PERMISSIONS, USER_ROLES};
 pub mod get;
 pub mod collection;
 pub mod permissions;
+pub mod stats;
 
 pub fn query(deps: Deps, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
@@ -28,6 +29,15 @@ pub fn query(deps: Deps, msg: QueryMsg) -> StdResult<Binary> {
         }
         QueryMsg::CheckPermission { collection, user, action } => {
             permissions::query_check_permission(deps, collection, user, action)
+        }
+        QueryMsg::GetDocumentStats { collection } => {
+            stats::query_document_stats(deps, collection)
+        }
+        QueryMsg::ListCollections { limit, start_after } => {
+            stats::query_list_collections(deps, limit, start_after)
+        }
+        QueryMsg::SearchDocuments { collection, query, limit, start_after } => {
+            stats::query_search_documents(deps, collection, query, limit, start_after)
         }
     }
 }
