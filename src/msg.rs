@@ -5,11 +5,13 @@ use crate::state::Document;
 use crate::state::CollectionPermissions;
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct InstantiateMsg {
     pub admin: String,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub enum ExecuteMsg {
     // Firebase-style operations
     Set {
@@ -49,6 +51,7 @@ pub enum ExecuteMsg {
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct WriteOperation {
     pub collection: String,
     pub document: String,
@@ -56,6 +59,7 @@ pub struct WriteOperation {
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub enum WriteType {
     Set { data: String },
     Update { data: String },
@@ -63,6 +67,7 @@ pub enum WriteType {
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub enum QueryMsg {
     // Get single document
     Get {
@@ -98,12 +103,14 @@ pub enum QueryMsg {
 
 // Response types
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct DocumentResponse {
     pub exists: bool,
     pub document: Option<Document>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct CollectionResponse {
     pub documents: Vec<(String, Document)>,  // (doc_id, document)
     pub next_start_after: Option<String>,
